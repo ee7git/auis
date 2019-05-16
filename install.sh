@@ -10,26 +10,26 @@ clear
      echo "usage: $0 [-upass password ] [-rpass password ] [ -dd | --default-device ] [ -r | --reboot ] [-h]"
  }
 
- while [ "$1" != "" ]; do
-     case $1 in
-         -upass )                 shift
-                                  USER_PASSWORD="${1}"
-                                  ;;
-         -rpass )                 shift
-                                  ROOT_PASSWORD="${1}"
-                                  ;;
-         -dd | --default-device ) DEFAULT_DEVICE="yes"
-                                  ;;
-         -r | --reboot )          REBOOT="yes"
-                                  ;;
-         -h | --help )            usage
-                                  exit
-                                  ;;
-         * )                      usage
-                                  exit 1
-     esac
-     shift
- done
+while [ "$1" != "" ]; do
+    case $1 in
+        -upass )                 shift
+                                 USER_PASSWORD="${1}"
+                                 ;;
+        -rpass )                 shift
+                                 ROOT_PASSWORD="${1}"
+                                 ;;
+        -dd | --default-device ) DEFAULT_DEVICE="yes"
+                                 ;;
+        -r | --reboot )          REBOOT="yes"
+                                 ;;
+        -h | --help )            usage
+                                 exit
+                                 ;;
+        * )                      usage
+                                 exit 1
+    esac
+    shift
+done
 
 function announce {
     >&2 echo -e "\e[1m\e[97m[ ${1} \e[93mSTART\e[39m ]\e[0m"
@@ -339,6 +339,15 @@ announce "Deleting dotfiles"
 ${ARCH} rm -rf /home/${USERNAME}/tmp /home/${USERNAME}/.git /home/${USERNAME}/README.md
 check_fail
 
+announce "Configuring mate-terminal"
+mv -f /mnt/home/${USERNAME}/mate-terminal.conf .
+cat mate-terminal.conf | ${ARCH} dconf load /org/mate/terminal/
+check_fail
+
+announce "Installing Vim plug"
+${ARCH} su ${USERNAME} -c 'vim +PlugInstall +qall'
+check_fail
+
 announce "Setting home files permissions"
 ${ARCH} find /home/${USERNAME} -type d -exec chmod 0750 {} +
 check_fail
@@ -352,7 +361,7 @@ ${ARCH} chown -R ${USERNAME}:${USERNAME} /home/${USERNAME}/
 check_fail
 
 announce "Unmounting partitions"
-${ARCH} umount -R /mnt
+umount -R /mnt
 check_fail
 
 echo "Installation complete!"
