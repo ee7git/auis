@@ -32,15 +32,15 @@ while [ "$1" != "" ]; do
 done
 
 function announce {
-    >&2 echo -e "\e[1m\e[97m[ ${1} \e[93mSTART\e[39m ]\e[0m"
+    >&2 echo -e "\e[1m\e[97m[ \e[93mINIT\e[39m ] ${1}...\e[0m"
     last="${1}"
 }
 function check_fail {
     if [[ $? -ne 0 ]]; then
-        >&2 echo -e "\e[1m[ ${last} \e[31mFAIL\e[39m ]\e[0m"
+        >&2 echo -e "\e[1m[ \e[31mFAIL\e[39m ] ${last}\e[0m"
         exit 1
     else
-        >&2 echo -e "\e[1m[ ${last} \e[32mDONE\e[39m ]\e[0m"
+        >&2 echo -e "\e[1m[ \e[32mDONE\e[39m ] ${last}\e[0m"
     fi
 }
 
@@ -339,14 +339,14 @@ announce "Deleting dotfiles"
 ${ARCH} rm -rf /home/${USERNAME}/tmp /home/${USERNAME}/.git /home/${USERNAME}/README.md
 check_fail
 
-announce "Configuring mate-terminal"
-mv -f /mnt/home/${USERNAME}/dconf.conf .
-cat dconf.conf | ${ARCH} dconf load /
-check_fail
+#announce "Configuring mate-terminal"
+#mv -f /mnt/home/${USERNAME}/dconf.conf .
+#cat dconf.conf | ${ARCH} dconf load /
+#check_fail
 
-announce "Installing Vim plug"
-${ARCH} su ${USERNAME} -c 'vim +PlugInstall +qall > /dev/null'
-check_fail
+#announce "Installing Vim plug"
+#${ARCH} su ${USERNAME} -c 'vim +PlugInstall +qall > /dev/null'
+#check_fail
 
 announce "Setting home files permissions"
 ${ARCH} find /home/${USERNAME} -type d -exec chmod 0750 {} +
