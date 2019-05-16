@@ -345,7 +345,7 @@ cat dconf.conf | ${ARCH} dconf load /
 check_fail
 
 announce "Installing Vim plug"
-${ARCH} su ${USERNAME} -c 'vim +PlugInstall +qall'
+${ARCH} su ${USERNAME} -c 'vim +PlugInstall +qall > /dev/null'
 check_fail
 
 announce "Setting home files permissions"
