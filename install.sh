@@ -340,8 +340,8 @@ ${ARCH} rm -rf /home/${USERNAME}/tmp /home/${USERNAME}/.git /home/${USERNAME}/RE
 check_fail
 
 announce "Configuring mate-terminal"
-mv -f /mnt/home/${USERNAME}/mate-terminal.conf .
-cat mate-terminal.conf | ${ARCH} dconf load /org/mate/terminal/
+mv -f /mnt/home/${USERNAME}/dconf.conf .
+cat dconf.conf | ${ARCH} dconf load /
 check_fail
 
 announce "Installing Vim plug"
