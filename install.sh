@@ -126,6 +126,8 @@ $(pacman -Ssq "^ttf.*")
 PACKAGES=$( IFS=$' '; echo "${PACKAGES_LIST[*]}" )
 ARCH='arch-chroot /mnt'
 
+welcome_banner
+
 if [[ -z ${DEFAULT_DEVICE} ]]; then
     while
         announce "Listing blocks"
