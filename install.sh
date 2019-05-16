@@ -128,6 +128,10 @@ ARCH='arch-chroot /mnt'
 
 welcome_banner
 
+announce "Checking internet connectivity"
+wget -q --tries=10 --timeout=20 --spider http://example.com/
+check_fail
+
 if [[ -z ${DEFAULT_DEVICE} ]]; then
     while
         announce "Listing blocks"
@@ -149,10 +153,6 @@ fi
 PART_ROOT="${DEVICE}2"
 PART_UEFI="${DEVICE}1"
 
-announce "Checking internet connectivity"
-wget -q --tries=10 --timeout=20 --spider http://example.com/
-check_fail
-
 announce "Formatting disk"
 #fdisk "${DEVICE}"
 echo 'g
@@ -171,6 +171,7 @@ t
 22
 w
 ' | fdisk "${DEVICE}"
+check_fail
 
 announce "Installing dosfstools"
 pacman -S --noconfirm dosfstools
