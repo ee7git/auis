@@ -102,6 +102,7 @@ openbox
 openssh
 opera
 p7zip
+prettier
 sudo
 tar
 mate-terminal
