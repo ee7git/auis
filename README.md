@@ -9,7 +9,7 @@ After booting from the Arch Linux UEFI Live USB:
 * Download the repo:
 
 ```shell
-git clone --branch chromebook --depth 1 --single-branch https://github.com/ee7git/auis.git
+git clone --branch chromebook --depth 1 --single-branch https://github.com/wjes/auis.git
 ```
 * Run the script:
 
