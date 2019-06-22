@@ -130,8 +130,19 @@ if [[ -z ${DEFAULT_DEVICE} ]]; then
     while
         announce "Listing blocks"
         lsblk -f && echo
-    	read -sp "Enter device (default '/dev/mmcblk0')" DEVICE && echo
-    	[[ ! -d "${DEVICE}" && ! -z "${DEVICE}" ]]
+    	read -sp "Enter device for root & efi (default '/dev/mmcblk0')" DEVICE_ROOT && echo
+    	[[ ! -d "${DEVICE_ROOT}" && ! -z "${DEVICE_ROOT}" ]]
+    do
+        clear
+    	announce "The device does not exist!" && echo
+    done
+    check_fail
+    
+    while
+        announce "Listing blocks"
+        lsblk -f && echo
+    	read -sp "Enter device for home (default '/dev/sda')" DEVICE_HOME && echo
+    	[[ ! -d "${DEVICE_HOME}" && ! -z "${DEVICE_HOME}" ]]
     do
         clear
     	announce "The device does not exist!" && echo
@@ -139,16 +150,22 @@ if [[ -z ${DEFAULT_DEVICE} ]]; then
     check_fail
 fi
 
-if [ -z ${DEVICE} ] ; then
-	announce "Setting device to default value!"
-	DEVICE="/dev/mmcblk0"
+if [ -z ${DEVICE_ROOT} ] ; then
+	announce "Setting root & efi device to default value!"
+	DEVICE_ROOT="/dev/mmcblk0"
 fi
 
-PART_ROOT="${DEVICE}p2"
-PART_UEFI="${DEVICE}p1"
+if [ -z ${DEVICE_HOME} ] ; then
+	announce "Setting home device to default value!"
+	DEVICE_HOME="/dev/sda"
+fi
 
-announce "Formatting disk"
-#fdisk "${DEVICE}"
+PART_ROOT="${DEVICE_ROOT}p2"
+PART_UEFI="${DEVICE_ROOT}p1"
+PART_HOME="${DEVICE_HOME}1"
+
+announce "Formatting root disk"
+#fdisk "${DEVICE_ROOT}"
 echo 'g
 n
 1
@@ -164,7 +181,26 @@ t
 2
 22
 w
-' | fdisk "${DEVICE}"
+' | fdisk "${DEVICE_ROOT}"
+check_fail
+
+announce "Formatting home disk"
+fdisk "${DEVICE_HOME}"
+#echo 'g
+#n
+#1
+#
+#+550M
+#t
+#1
+#n
+#2
+#
+#
+#2
+#22
+#w
+#' | fdisk "${DEVICE_HOME}"
 check_fail
 
 announce "Installing dosfstools"
@@ -179,6 +215,10 @@ announce "Formatting root partition"
 mkfs.ext4 -F "${PART_ROOT}"
 check_fail
 
+announce "Formatting home partition"
+mkfs.ext4 -F "${PART_HOME}"
+check_fail
+
 announce "Mounting root partition"
 mount "${PART_ROOT}" /mnt
 check_fail
@@ -186,6 +226,11 @@ check_fail
 announce "Mounting UEFI partition"
 mkdir -p /mnt/efi
 mount "${PART_UEFI}" /mnt/efi
+check_fail
+
+announce "Mounting home partition"
+mkdir -p /mnt/home
+mount "${PART_HOME}" /mnt/home
 check_fail
 
 announce "Installing base system"
