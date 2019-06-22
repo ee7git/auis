@@ -1,5 +1,5 @@
 #!/bin/bash
-# Last update May 14th 2019
+# Last update June 22th 2019
 #
 
 set -e
@@ -72,15 +72,12 @@ bash-completion
 chromium
 cups
 cups-pdf
-deadbeef
 efibootmgr
 eom
-eslint
 faenza-icon-theme
 feh
 firefox
 flashplugin
-gimp
 git
 grub
 gvfs
@@ -88,7 +85,6 @@ gvfs-mtp
 mesa-libgl
 htop
 i3lock
-inkscape
 lib32-libcups
 lib32-mesa
 lxappearance
@@ -102,13 +98,11 @@ openbox
 openssh
 opera
 p7zip
-prettier
 sudo
 tar
 mate-terminal
 thunar
 tint2
-transmission-gtk
 vim
 unrar
 unzip
@@ -118,7 +112,6 @@ xf86-video-intel
 xorg-server
 xorg-xinit
 xss-lock
-youtube-dl
 zip
 zsh
 zsh-completions
@@ -137,7 +130,7 @@ if [[ -z ${DEFAULT_DEVICE} ]]; then
     while
         announce "Listing blocks"
         lsblk -f && echo
-    	read -sp "Enter device (default '/dev/sda')" DEVICE && echo
+    	read -sp "Enter device (default '/dev/mmcblk0')" DEVICE && echo
     	[[ ! -d "${DEVICE}" && ! -z "${DEVICE}" ]]
     do
         clear
@@ -148,11 +141,11 @@ fi
 
 if [ -z ${DEVICE} ] ; then
 	announce "Setting device to default value!"
-	DEVICE="/dev/sda"
+	DEVICE="/dev/mmcblk0"
 fi
 
-PART_ROOT="${DEVICE}2"
-PART_UEFI="${DEVICE}1"
+PART_ROOT="${DEVICE}p2"
+PART_UEFI="${DEVICE}p1"
 
 announce "Formatting disk"
 #fdisk "${DEVICE}"
@@ -191,7 +184,7 @@ mount "${PART_ROOT}" /mnt
 check_fail
 
 announce "Mounting UEFI partition"
-mkdir /mnt/efi
+mkdir -p /mnt/efi
 mount "${PART_UEFI}" /mnt/efi
 check_fail
 
@@ -304,22 +297,22 @@ ACTION=="add|change", KERNEL=="sd[a-z]", ATTR{queue/rotational}=="0", ATTR{queue
 EOF
 check_fail
 
-announce "Fixing snd_hda_intel alsa issue"
-cat <<EOF > /mnt/etc/modprobe.d/50-alsa.conf
-options snd_hda_intel enable=1 index=0
-options snd_hda_intel index=1
-EOF
-check_fail
+#announce "Fixing snd_hda_intel alsa issue"
+#cat <<EOF > /mnt/etc/modprobe.d/50-alsa.conf
+#options snd_hda_intel enable=1 index=0
+#options snd_hda_intel index=1
+#EOF
+#check_fail
 
 announce "Creating 00-keyboard.conf"
 cat <<EOF > /mnt/etc/X11/xorg.conf.d/00-keyboard.conf
 Section "InputClass"
-    Identifier "keyboard languages"
-    MatchIsKeyboard "on"
-    Option "XkbLayout" "latam,us,ru"
-    Option "XkbModel" "pc104"
-    Option "XkbVariant" ",,"
-    Option "XkbOptions" "grp:alt_shift_toggle"
+        Identifier "system-keyboard"
+        MatchIsKeyboard "on"
+        Option "XkbLayout" "us,latam"
+        Option "XkbModel" "chromebook"
+        Option "XkbVariant" ","
+        Option "XkbOptions" "grp:alt_shift_toggle"
 EndSection
 EOF
 check_fail
@@ -329,7 +322,7 @@ ${ARCH} sed -i 's/#\(Handle\(PowerKey\|LidSwitch\(ExternalPower\|Docked\)\?\)=\)
 check_fail
 
 announce "Loading dotfiles"
-${ARCH} git clone --separate-git-dir=/home/${USERNAME}/.dotfiles https://github.com/ee7git/dotfiles.git /home/${USERNAME}/tmp
+${ARCH} git clone --branch chromebook --single-branch --separate-git-dir=/home/${USERNAME}/.dotfiles https://github.com/wjes/dotfiles.git /home/${USERNAME}/tmp
 check_fail
 
 announce "Copying dotfiles"
