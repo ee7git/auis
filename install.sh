@@ -318,7 +318,7 @@ EOF
 check_fail
 
 announce "Configuring logind triggers"
-${ARCH} sed -i 's/#\(Handle\(PowerKey\|LidSwitch\(ExternalPower\|Docked\)\?\)=\).*/\1lock/' /etc/systemd/logind.conf
+${ARCH} sed -i 's/#\(HandlePowerKey=\).*/\1ignore/;s/#\(Handle\(LidSwitch\(ExternalPower\|Docked\)\?\)=\).*/\1lock/' /etc/systemd/logind.conf
 check_fail
 
 announce "Loading dotfiles"
