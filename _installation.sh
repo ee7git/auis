@@ -86,7 +86,7 @@ ttf-roboto
 ttf-roboto-mono
 ttf-ubuntu-font-family
 )
-CONF_PACSTRAP_PACKAGES=$( IFS=$' '; echo "${CONF_PACKAGES_LIST[*]}" )
+CONF_PACSTRAP_PACKAGES=$( IFS=$' '; echo "${CONF_PACSTRAP_PACKAGES_LIST[*]}" )
 CONF_PACKAGES=$( IFS=$' '; echo "${CONF_PACKAGES_LIST[*]}" )
 
 # -----------------------------------------------------------------------------
@@ -94,24 +94,24 @@ CONF_PACKAGES=$( IFS=$' '; echo "${CONF_PACKAGES_LIST[*]}" )
 # Install base system
 #
 # -----------------------------------------------------------------------------
+
+announce "Enabling multilib repository locally"
+sed -i '/#\[multilib\]/{N;s/#\(.*\)\n#\(.*\)/\1\n\2/}' /etc/pacman.conf
+check
+
+announce "Installing base system"
+pacstrap /mnt ${CONF_PACSTRAP_PACKAGES}
+check
+
+# -----------------------------------------------------------------------------
 #
-#announce "Enabling multilib repository locally"
-#sed -i '/#\[multilib\]/{N;s/#\(.*\)\n#\(.*\)/\1\n\2/}' /etc/pacman.conf
-#check
+# Configurations
 #
-#announce "Installing base system"
-#pacstrap /mnt ${CONF_PACSTRAP_PACKAGES}
-#check
-#
-## -----------------------------------------------------------------------------
-##
-## Configurations
-##
-## -----------------------------------------------------------------------------
-#
-#announce "Setting hostname"
-#${ARCH_CHROOT} echo "${CONF_HOSTNAME}" > /etc/hostname
-#check
+# -----------------------------------------------------------------------------
+
+announce "Setting hostname"
+${ARCH_CHROOT} echo "${CONF_HOSTNAME}" > /etc/hostname
+check
 
 announce "Setting locales"
 ${ARCH_CHROOT} sed -i "s/#\(${CONF_LOCALE}\.UTF-8\)/\1/" /etc/locale.gen
