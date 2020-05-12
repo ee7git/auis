@@ -4,13 +4,13 @@ Just a personal down-to-script of the official Arch Linux installation guide (ht
 
 After booting from the Arch Linux UEFI Live USB:
 
-* Connect to the internet with wifi-menu
-* Change the pacman mirror 
-* Install git
+* Connect to the internet with `wifi-menu`
+* Change pacman's mirror list `vim /etc/pacman.d/mirrorlist`
+* Install git `pacman -S git`
 * Download the repo:
 
 ```shell
-git clone --single-branch --depth 1 https://github.com/wjes/auis.git
+git clone --single-branch --depth 1 --branch desktop https://github.com/wjes/auis.git
 ```
 * Run the script:
 
