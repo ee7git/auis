@@ -61,8 +61,8 @@ if [[ ! -z "${AUTO_DISK_MANAGMENT}" && "${AUTO_DISK_MANAGMENT}" =~  ^(y|Y)$ ]]; 
   	DEVICE_HOME="/dev/sda"
   fi
   
-  PART_UEFI="${DEVICE_UEFI_ROOT}1"
-  PART_ROOT="${DEVICE_UEFI_ROOT}2"
+  PART_UEFI="${DEVICE_UEFI_ROOT}p1"
+  PART_ROOT="${DEVICE_UEFI_ROOT}p2"
   PART_HOME="${DEVICE_HOME}1"
   
   announce "Partitioning UEFI and root"

@@ -1,6 +1,5 @@
 
 set -em
-clear
 
 # -----------------------------------------------------------------------------
 # 
@@ -10,7 +9,7 @@ clear
 
  function usage()
  {
-     echo "usage: $0 [-upass password ] [-rpass password ] [ -dd | --default-devices ] [ -r | --reboot ] [-h]"
+     echo "usage: $0 [-upass password ] [-rpass password ] [ -r | --reboot ] [-h]"
  }
 
 while [ "$1" != "" ]; do
@@ -20,8 +19,6 @@ while [ "$1" != "" ]; do
                                  ;;
         -rpass )                 shift
                                  ROOT_PASSWORD="${1}"
-                                 ;;
-        -dd | --default-devices ) DEFAULT_DEVICES="yes"
                                  ;;
         -r | --reboot )          REBOOT="yes"
                                  ;;
@@ -68,6 +65,7 @@ function stop {
 #
 # -----------------------------------------------------------------------------
 
+clear
 echo -e '\e[1m\e[36m
            _    _ _____  _____
       /\  | |  | |_   _|/ ____|
@@ -79,9 +77,9 @@ echo -e '\e[1m\e[36m
  https://github.com/wjes/auis
 \e[0m'
 
-source _pre-installation.sh
-source _installation.sh
-source _post-installation.sh
+source ./_pre-installation.sh
+source ./_installation.sh
+source ./_post-installation.sh
 
 echo "Installation complete!"
 
