@@ -26,6 +26,7 @@ man-pages
 grub
 efibootmgr
 sudo
+sed
 )
 CONF_PACKAGES_LIST=(
 alsa-utils
@@ -93,20 +94,24 @@ CONF_PACKAGES=$( IFS=$' '; echo "${CONF_PACKAGES_LIST[*]}" )
 # Install base system
 #
 # -----------------------------------------------------------------------------
-
-announce "Installing base system"
-pacstrap /mnt ${CONF_PACSTRAP_PACKAGES}
-check
-
-# -----------------------------------------------------------------------------
 #
-# Configurations
+#announce "Enabling multilib repository locally"
+#sed -i '/#\[multilib\]/{N;s/#\(.*\)\n#\(.*\)/\1\n\2/}' /etc/pacman.conf
+#check
 #
-# -----------------------------------------------------------------------------
-
-announce "Setting hostname"
-${ARCH_CHROOT} echo "${CONF_HOSTNAME}" > /etc/hostname
-check
+#announce "Installing base system"
+#pacstrap /mnt ${CONF_PACSTRAP_PACKAGES}
+#check
+#
+## -----------------------------------------------------------------------------
+##
+## Configurations
+##
+## -----------------------------------------------------------------------------
+#
+#announce "Setting hostname"
+#${ARCH_CHROOT} echo "${CONF_HOSTNAME}" > /etc/hostname
+#check
 
 announce "Setting locales"
 ${ARCH_CHROOT} sed -i "s/#\(${CONF_LOCALE}\.UTF-8\)/\1/" /etc/locale.gen
