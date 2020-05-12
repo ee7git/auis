@@ -203,24 +203,24 @@ EOF
   #
   # -----------------------------------------------------------------------------
 
-  announce "Adding SSD flags to fstab for root"
-  ${ARCH_CHROOT} tune2fs -o discard "${PART_ROOT}"
-  check
+  # announce "Adding SSD flags to fstab for root"
+  # ${ARCH_CHROOT} tune2fs -o discard "${PART_ROOT}"
+  # check
+  # 
+  # announce "Adding SSD flags to fstab for home"
+  # ${ARCH_CHROOT} tune2fs -o discard "${PART_HOME}"
+  # check
   
-  announce "Adding SSD flags to fstab for home"
-  ${ARCH_CHROOT} tune2fs -o discard "${PART_HOME}"
-  check
-  
-  announce "Configuring SSD scheduler"
-  cat <<EOF > /mnt/etc/udev/rules.d/60-schedulers.rules
-# set scheduler for NVMe
-ACTION=="add|change", KERNEL=="nvme[0-9]*", ATTR{queue/scheduler}="none"
-# set scheduler for SSD and eMMC
-ACTION=="add|change", KERNEL=="sd[a-z]|mmcblk[0-9]*", ATTR{queue/rotational}=="0", ATTR{queue/scheduler}="mq-deadline"
-# set scheduler for rotating disks
-ACTION=="add|change", KERNEL=="sd[a-z]", ATTR{queue/rotational}=="1", ATTR{queue/scheduler}="bfq"
-EOF
-  check
+#  announce "Configuring SSD scheduler"
+#  cat <<EOF > /mnt/etc/udev/rules.d/60-schedulers.rules
+## set scheduler for NVMe
+#ACTION=="add|change", KERNEL=="nvme[0-9]*", ATTR{queue/scheduler}="none"
+## set scheduler for SSD and eMMC
+#ACTION=="add|change", KERNEL=="sd[a-z]|mmcblk[0-9]*", ATTR{queue/rotational}=="0", ATTR{queue/scheduler}="mq-deadline"
+## set scheduler for rotating disks
+#ACTION=="add|change", KERNEL=="sd[a-z]", ATTR{queue/rotational}=="1", ATTR{queue/scheduler}="bfq"
+#EOF
+#  check
 
 else
 

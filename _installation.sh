@@ -85,8 +85,8 @@ ttf-roboto
 ttf-roboto-mono
 ttf-ubuntu-font-family
 )
-CONF_PACSTRAP_PACKAGES=$( IFS=$' '; echo "${PACKAGES_LIST[*]}" )
-CONF_PACKAGES=$( IFS=$' '; echo "${PACKAGES_LIST[*]}" )
+CONF_PACSTRAP_PACKAGES=$( IFS=$' '; echo "${CONF_PACKAGES_LIST[*]}" )
+CONF_PACKAGES=$( IFS=$' '; echo "${CONF_PACKAGES_LIST[*]}" )
 
 # -----------------------------------------------------------------------------
 #
@@ -206,4 +206,5 @@ check
 announce "Installing packages"
 ${ARCH_CHROOT} su -l "${CONF_USERNAME}" -c "sudo pacman -Syu --noconfirm ${CONF_PACKAGES}"
 check
+
 
