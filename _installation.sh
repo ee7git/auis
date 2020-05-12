@@ -25,8 +25,6 @@ man-db
 man-pages
 grub
 efibootmgr
-sudo
-sed
 )
 CONF_PACKAGES_LIST=(
 alsa-utils
@@ -182,7 +180,7 @@ echo "root:${ROOT_PASSWORD}" | ${ARCH_CHROOT} chpasswd
 check
 
 announce "Creating user"
-${ARCH_CHROOT} useradd -m ${USERNAME}
+${ARCH_CHROOT} useradd -m ${CONF_USERNAME}
 check
 
 announce "Setting user password"
@@ -195,11 +193,11 @@ if [[ -z "${USER_PASSWORD}" ]]; then
         echo "Passwords must be equal and not empty!"
     done
 fi
-echo "${USERNAME}:${USER_PASSWORD}" | ${ARCH_CHROOT} chpasswd
+echo "${CONF_USERNAME}:${USER_PASSWORD}" | ${ARCH_CHROOT} chpasswd
 check
 
 announce "Adding user to sudoer"
-${ARCH_CHROOT} sed -i "s/root \(ALL=(ALL) ALL\)/&\n${USERNAME} \1/" /etc/sudoers
+${ARCH_CHROOT} sed -i "s/root \(ALL=(ALL) ALL\)/&\n${CONF_USERNAME} \1/" /etc/sudoers
 check
 
 # -----------------------------------------------------------------------------
@@ -209,7 +207,7 @@ check
 # -----------------------------------------------------------------------------
 
 announce "Installing packages"
-${ARCH_CHROOT} su -l "${CONF_USERNAME}" -c "sudo pacman -Syu --noconfirm ${CONF_PACKAGES}"
+${ARCH_CHROOT} pacman -Syu --noconfirm ${CONF_PACKAGES}
 check
 
 
