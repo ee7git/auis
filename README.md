@@ -36,7 +36,6 @@ git clone --single-branch --depth 1 --branch chromebook https://github.com/wjes/
 * Run the script:
 
 ```shell
-chmod +x main.sh
 # -upass : User password
 # -rpass : Root password
 # -r     : Reboot after finish
