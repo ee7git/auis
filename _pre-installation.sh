@@ -34,7 +34,7 @@ if [[ ! -z "${AUTO_DISK_MANAGMENT}" && "${AUTO_DISK_MANAGMENT}" =~  ^(y|Y)$ ]]; 
   while
     announce "Listing blocks"
     lsblk -f && echo
-    ead -sp "Enter device for UEFI and root partitions (default '/dev/nvme0n1')" DEVICE_UEFI_ROOT && echo
+    read -sp "Enter device for UEFI and root partitions (default '/dev/nvme0n1')" DEVICE_UEFI_ROOT && echo
     [[ ! -d "${DEVICE_UEFI_ROOT}" && ! -z "${DEVICE_UEFI_ROOT}" ]]
   do
    	announce "The device does not exist!" && echo
@@ -44,7 +44,7 @@ if [[ ! -z "${AUTO_DISK_MANAGMENT}" && "${AUTO_DISK_MANAGMENT}" =~  ^(y|Y)$ ]]; 
   while
     announce "Listing blocks"
     lsblk -f && echo
-    ead -sp "Enter device for home partition (default '/dev/sda')" DEVICE_HOME && echo
+    read -sp "Enter device for home partition (default '/dev/sda')" DEVICE_HOME && echo
     [[ ! -d "${DEVICE_HOME}" && ! -z "${DEVICE_HOME}" ]]
   do
    	announce "The device does not exist!" && echo
@@ -85,28 +85,6 @@ if [[ ! -z "${AUTO_DISK_MANAGMENT}" && "${AUTO_DISK_MANAGMENT}" =~  ^(y|Y)$ ]]; 
 EOF
   check
   
-  # announce "Partitioning UEFI and root"
-  # sed -e 's/\s*\([\+0-9a-zA-Z]*\).*/\1/' << EOF | fdisk "${DEVICE_UEFI_ROOT}"
-  # g # clear the in memory partition table
-  # n # new partition
-  # 1 # partition number 1
-  #   # default - start at beginning of disk
-  # +512M # 512 MB UEFI parttion
-  # n # new partition
-  # 2 # partion number 2
-  #   # default, start immediately after preceding partition
-  #   # default, extend partition to end of disk
-  # t # change UEFI partition type
-  # 1 # partition number 1
-  # 1 # to UEFI system
-  # t # change root partition type
-  # 2 # partion number 2
-  # 22 # to linux root x86_64 system
-  # p # print the in-memory partition table
-  # w # write the partition table
-  # EOF
-  # check
-  
   announce "Partitioning home"
   sed -e 's/\s*\([\+0-9a-zA-Z]*\).*/\1/' << EOF | sudo gdisk "${DEVICE_HOME}"
   o     # clear the in memory partition table
@@ -121,49 +99,12 @@ EOF
   y     # yes
 EOF
   check
-  
-  # announce "Partitioning home"
-  # sed -e 's/\s*\([\+0-9a-zA-Z]*\).*/\1/' << EOF | fdisk "${DEVICE_HOME}"
-  # g # clear the in memory partition table
-  # n # new partition
-  # 1 # partition number 1
-  #   # default - start at beginning of disk
-  #   # default, extend partition to end of disk
-  # t # change UEFI partition type
-  # 1 # partition number 1
-  # 28 # to home system
-  # p # print the in-memory partition table
-  # w # write the partition table
-  # EOF
-  # check
-  
-  # echo 'g
-  # n
-  # 1
-  # 
-  # +550M
-  # t
-  # 1
-  # n
-  # 2
-  # 
-  # 
-  # t
-  # 2
-  # 22
-  # w
-  # ' | fdisk "${DEVICE}"
-  
 
   # -----------------------------------------------------------------------------
   #
   # Formatting
   #
   # -----------------------------------------------------------------------------
-  
-  # announce "Installing dosfstools"
-  # pacman -S --noconfirm dosfstools
-  # check
   
   announce "Formatting UEFI partition"
   mkfs.fat -F32 "${PART_UEFI}"
@@ -196,31 +137,6 @@ EOF
   mkdir -p /mnt/home
   mount "${PART_HOME}" /mnt/home
   check
-
-  # -----------------------------------------------------------------------------
-  #
-  # SSD optimization
-  #
-  # -----------------------------------------------------------------------------
-
-  # announce "Adding SSD flags to fstab for root"
-  # ${ARCH_CHROOT} tune2fs -o discard "${PART_ROOT}"
-  # check
-  # 
-  # announce "Adding SSD flags to fstab for home"
-  # ${ARCH_CHROOT} tune2fs -o discard "${PART_HOME}"
-  # check
-  
-#  announce "Configuring SSD scheduler"
-#  cat <<EOF > /mnt/etc/udev/rules.d/60-schedulers.rules
-## set scheduler for NVMe
-#ACTION=="add|change", KERNEL=="nvme[0-9]*", ATTR{queue/scheduler}="none"
-## set scheduler for SSD and eMMC
-#ACTION=="add|change", KERNEL=="sd[a-z]|mmcblk[0-9]*", ATTR{queue/rotational}=="0", ATTR{queue/scheduler}="mq-deadline"
-## set scheduler for rotating disks
-#ACTION=="add|change", KERNEL=="sd[a-z]", ATTR{queue/rotational}=="1", ATTR{queue/scheduler}="bfq"
-#EOF
-#  check
 
 else
 

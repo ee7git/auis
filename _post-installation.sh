@@ -1,4 +1,30 @@
 
+
+ # -----------------------------------------------------------------------------
+ #
+ # SSD optimization
+ #
+ # -----------------------------------------------------------------------------
+
+announce "Adding SSD flags to fstab for root"
+${ARCH_CHROOT} tune2fs -o discard "${PART_ROOT}"
+check
+
+announce "Adding SSD flags to fstab for home"
+${ARCH_CHROOT} tune2fs -o discard "${PART_HOME}"
+check
+ 
+announce "Configuring SSD scheduler"
+cat <<EOF > /mnt/etc/udev/rules.d/60-schedulers.rules
+# set scheduler for NVMe
+ACTION=="add|change", KERNEL=="nvme[0-9]*", ATTR{queue/scheduler}="none"
+# set scheduler for SSD and eMMC
+ACTION=="add|change", KERNEL=="sd[a-z]|mmcblk[0-9]*", ATTR{queue/rotational}=="0", ATTR{queue/scheduler}="mq-deadline"
+# set scheduler for rotating disks
+ACTION=="add|change", KERNEL=="sd[a-z]", ATTR{queue/rotational}=="1", ATTR{queue/scheduler}="bfq"
+EOF
+check
+
 # -----------------------------------------------------------------------------
 #
 # Adding key language switchers
@@ -34,6 +60,14 @@ check
 
 announce "Deleting dotfiles"
 ${ARCH_CHROOT} su -l "${CONF_USERNAME}" -c "rm -rf /home/${CONF_USERNAME}/tmp /home/${CONF_USERNAME}/.git /home/${CONF_USERNAME}/README.md"
+check
+
+announce "Loading bash-it"
+${ARCH_CHROOT} su -l "${CONF_USERNAME}" -c "git clone --depth=1 https://github.com/Bash-it/bash-it.git ~/.bash_it && ~/.bash_it/install.sh --no-modify-config"
+check
+
+announce "Loading powerline fonts"
+${ARCH_CHROOT} su -l "${CONF_USERNAME}" -c "git clone --depth=1 https://github.com/powerline/fonts.git && ./fonts/install.sh && rm -rf fonts"
 check
 
 announce "Installing Vim plug"
