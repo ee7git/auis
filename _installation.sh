@@ -94,10 +94,6 @@ CONF_PACKAGES=$( IFS=$' '; echo "${CONF_PACKAGES_LIST[*]}" )
 #
 # -----------------------------------------------------------------------------
 
-announce "Enabling multilib repository locally"
-sed -i '/#\[multilib\]/{N;s/#\(.*\)\n#\(.*\)/\1\n\2/}' /etc/pacman.conf
-check
-
 announce "Installing base system"
 pacstrap /mnt ${CONF_PACSTRAP_PACKAGES}
 check
