@@ -15,7 +15,6 @@ git clone --single-branch --depth 1 --branch desktop https://github.com/wjes/aui
 * Run the script:
 
 ```shell
-chmod +x main.sh
 # -upass : User password
 # -rpass : Root password
 # -r     : Reboot after finish
