@@ -54,6 +54,7 @@ make
 mplayer
 nodejs
 npm
+ntfs-3g
 obconf
 openbox
 openssh
