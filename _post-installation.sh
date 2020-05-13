@@ -36,7 +36,7 @@ cat <<EOF > /mnt/etc/X11/xorg.conf.d/00-keyboard.conf
 Section "InputClass"
     Identifier "keyboard languages"
     MatchIsKeyboard "on"
-    Option "XkbLayout" "latam,et,ru"
+    Option "XkbLayout" "latam,ee,ru"
     Option "XkbModel" "pc104"
     Option "XkbVariant" ",,"
     Option "XkbOptions" "grp:alt_shift_toggle"
