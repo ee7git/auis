@@ -28,6 +28,7 @@ efibootmgr
 )
 CONF_PACKAGES_LIST=(
 alsa-utils
+apache
 atril
 bash-completion
 chromium
@@ -43,6 +44,7 @@ flashplugin
 gimp
 gvfs
 gvfs-mtp
+mariadb
 mesa-libgl
 htop
 i3lock
@@ -159,6 +161,16 @@ check
 
 # -----------------------------------------------------------------------------
 #
+# Installing packages
+#
+# -----------------------------------------------------------------------------
+
+announce "Installing packages"
+${ARCH_CHROOT} pacman -Syu --noconfirm ${CONF_PACKAGES}
+check
+
+# -----------------------------------------------------------------------------
+#
 # Users
 #
 # -----------------------------------------------------------------------------
@@ -197,14 +209,14 @@ announce "Adding user to sudoer"
 ${ARCH_CHROOT} sed -i "s/root \(ALL=(ALL) ALL\)/&\n${CONF_USERNAME} \1/" /etc/sudoers
 check
 
-# -----------------------------------------------------------------------------
-#
-# Installing packages
-#
-# -----------------------------------------------------------------------------
-
-announce "Installing packages"
-${ARCH_CHROOT} pacman -Syu --noconfirm ${CONF_PACKAGES}
+announce "Adding user to group http"
+${ARCH_CHROOT} gpasswd -a "${CONF_USERNAME}" http 
 check
 
+announce "Adding user to group ftp"
+${ARCH_CHROOT} gpasswd -a "${CONF_USERNAME}" ftp
+check
 
+announce "Adding user to group mysql"
+${ARCH_CHROOT} gpasswd -a "${CONF_USERNAME}" mysql 
+check

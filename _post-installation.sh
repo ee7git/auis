@@ -88,6 +88,52 @@ check
 
 # -----------------------------------------------------------------------------
 #
+# MongoDB
+#
+# -----------------------------------------------------------------------------
+
+announce "Downloading MongoDB"
+${ARCH_CHROOT} su -l "${CONF_USERNAME}" -c "wget https://aur.archlinux.org/cgit/aur.git/snapshot/mongodb-bin.tar.gz"
+check
+
+announce "Extracting MongoDB"
+${ARCH_CHROOT} su -l "${CONF_USERNAME}" -c "tar -xzvf mongodb-bin.tar.gz"
+check
+
+announce "Generating MongoDB package"
+${ARCH_CHROOT} su -l "${CONF_USERNAME}" -c "cd mongodb-bin && makepkg -s"
+check
+
+announce "Installing MongoDB"
+${ARCH_CHROOT} "cd mongodb-bin && pacman -U mongodb-bin-*.pkg.tar.xz"
+check
+
+announce "Deleting MongoDB directory"
+${ARCH_CHROOT} "rm -rf mongodb-bin mongodb-bin.tar.gz"
+check
+
+announce "Installing MongoDB tools"
+${ARCH_CHROOT} su -l "${CONF_USERNAME}" -c "wget https://aur.archlinux.org/cgit/aur.git/snapshot/mongodb-tools-bin.tar.gz"
+check
+
+announce "Extracting MongoDB tools"
+${ARCH_CHROOT} su -l "${CONF_USERNAME}" -c "tar -xzvf mongodb-tools-bin.tar.gz"
+check
+
+announce "Generating MongoDB tools package"
+${ARCH_CHROOT} su -l "${CONF_USERNAME}" -c "cd mongodb-tools-bin && makepkg -s"
+check
+
+announce "Installing MongoDB tools"
+${ARCH_CHROOT} "cd mongodb-tools-bin && pacman -U mongodb-tools-bin-*.pkg.tar.xz"
+check
+
+announce "Deleting MongoDB tools directory"
+${ARCH_CHROOT} "rm -rf mongodb-bin-tools mongodb-tools-bin.tar.gz"
+check
+
+# -----------------------------------------------------------------------------
+#
 # Unmounting
 #
 # -----------------------------------------------------------------------------
