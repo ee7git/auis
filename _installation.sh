@@ -27,6 +27,8 @@ grub
 efibootmgr
 )
 CONF_PACKAGES_LIST=(
+adobe-source-han-sans-otc-fonts
+adobe-source-han-serif-otc-fonts
 alsa-utils
 apache
 atril
@@ -55,6 +57,7 @@ lxappearance
 make
 mplayer
 nodejs
+noto-fonts-cjk
 npm
 ntfs-3g
 obconf
@@ -68,6 +71,14 @@ terminator
 thunar
 tint2
 transmission-gtk
+ttf-anonymous-pro
+ttf-dejavu
+ttf-liberation
+ttf-linux-libertine
+ttf-linux-libertine-g
+ttf-roboto
+ttf-roboto-mono
+ttf-ubuntu-font-family
 unrar
 unzip
 wget
@@ -78,14 +89,6 @@ xorg-xinit
 xss-lock
 youtube-dl
 zip
-ttf-anonymous-pro
-ttf-dejavu
-ttf-liberation
-ttf-linux-libertine
-ttf-linux-libertine-g
-ttf-roboto
-ttf-roboto-mono
-ttf-ubuntu-font-family
 )
 CONF_PACSTRAP_PACKAGES=$( IFS=$' '; echo "${CONF_PACSTRAP_PACKAGES_LIST[*]}" )
 CONF_PACKAGES=$( IFS=$' '; echo "${CONF_PACKAGES_LIST[*]}" )
